@@ -19,9 +19,11 @@ void Listener(SKSE::MessagingInterface::Message* a_msg) {
 		Forms::Loader::GetSingleton()->LoadForms();
 		ResEvent::RegisterAll();		
 		addSubscriber();
+		Forms::Loader::GetSingleton()->AdjustRepairPrice();
 		break;
 	case SKSE::MessagingInterface::kPostLoadGame:
 		Forms::Loader::GetSingleton()->AdjustRepairPrice();
+		REX::INFO("Respawn marker at: x={}, y={}, z={}", Forms::Loader::respawn_marker->GetPosition().x, Forms::Loader::respawn_marker->GetPosition().y, Forms::Loader::respawn_marker->GetPosition().z);
 		break;
 	}
 }

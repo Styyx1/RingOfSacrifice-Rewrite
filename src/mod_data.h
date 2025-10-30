@@ -25,6 +25,7 @@ namespace DATA {
 	inline constexpr int whiterun_drunken_huntsman_inn_ID = 0x165B7;
 	inline constexpr int solstheim_inn_ID = 0x17EC0;
 	inline constexpr int morthal_inn_ID = 0x138CE;
+	inline constexpr int teleporter_marker_cell_ID = 0x808;
 
 	inline constexpr int heal_spell_ID = 0x805;
 	inline constexpr int cooldown_spell_ID = 0x807;
@@ -38,6 +39,8 @@ namespace DATA {
 	inline constexpr int recipe_repair_ring_ID = 0x80A;
 	inline constexpr int ring_of_sacrifice_repair_increase_ID = 0x80C;
 	inline constexpr int ring_of_sacrifice_times_repaired_ID = 0x80D;
+	inline constexpr int allowed_bed_list_ID = 0x80E;
+	inline constexpr int respawn_marker_ID = 0x814;
 
 #pragma endregion FormData
 #pragma region ConfigData

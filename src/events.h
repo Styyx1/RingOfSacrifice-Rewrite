@@ -21,5 +21,10 @@ namespace ResEvent {
 		uint32_t item_crafted_count{0};
 		int32_t GetRequiredGoldCount();
 	};
+	struct CellChangeEvent : public REX::Singleton<CellChangeEvent>, public RE::BSTEventSink<BGSActorCellEvent> {
+		void Register();
+		Result ProcessEvent(const RE::BGSActorCellEvent* a_event, RE::BSTEventSource<RE::BGSActorCellEvent>*) override;
+		std::optional<bool> last_cell_interior;
+	};
 
 }

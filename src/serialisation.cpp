@@ -47,8 +47,9 @@ namespace Serialisation {
 		}
 		else {
 			ResEvent::SleepEvent::bed_ID = last_bed_ID;			
-			//ResEvent::FindRefWithID(last_bed_ID);
+			
 			REX::INFO("Loaded last used bed FormID: {}", last_bed_ID);
+			ResEvent::FindRefWithID(last_bed_ID);
 		}
 	}
 

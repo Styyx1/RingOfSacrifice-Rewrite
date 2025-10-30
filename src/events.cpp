@@ -10,11 +10,52 @@ namespace ResEvent {
 		REX::INFO("Registered for {}", typeid(RE::TESSleepStopEvent).name());
 	}
 
+	Result CellChangeEvent::ProcessEvent(const RE::BGSActorCellEvent* a_event, RE::BSTEventSource<RE::BGSActorCellEvent>*)
+	{
+		if(!a_event || a_event->flags == RE::BGSActorCellEvent::CellFlag::kLeave)
+			return Result::kContinue;
+
+		auto m_cellID = a_event->cellID;
+		auto cell = RE::TESForm::LookupByID(m_cellID)->As<RE::TESObjectCELL>();
+
+		if(!cell)
+			return Result::kContinue;
+
+		const bool curr_cell_interior = cell->IsInteriorCell();
+
+		if(auto ui = UI::GetSingleton(); ui && ui->IsMenuOpen(MainMenu::MENU_NAME)) {
+			return Result::kContinue;
+		}
+
+		if (Forms::Loader::teleport_cells.contains(cell))
+			return Result::kContinue;
+
+		auto actor = a_event->actor.get().get();
+		if (!actor || !actor->IsPlayerRef()) {
+			return Result::kContinue;
+		}
+		//https://github.com/powerof3/LightPlacer/blob/a549263c61e37d07d0c1a36d9037bf73db44b319/src/Manager.cpp#L516
+		if (last_cell_interior != curr_cell_interior) {
+			Forms::Loader::respawn_marker->MoveTo(actor);
+			REX::DEBUG("Moved respawn marker to {} in cell: {}", actor->GetName(), cell->GetName());
+		}
+		last_cell_interior = curr_cell_interior;
+
+		return Result::kContinue;
+	}
+
 	void ItemCraftedEvent::Register()
 	{		
 		auto src = ItemCrafted::GetEventSource();
 		src->AddEventSink(this);
 		REX::INFO("Registered for {}", typeid(ItemCrafted::Event).name());
+	}
+
+	void CellChangeEvent::Register()
+	{
+		auto player = RE::PlayerCharacter::GetSingleton();
+		player->AddEventSink(this);
+		REX::INFO("Registered for {}", typeid(RE::BGSActorCellEvent).name());
 	}
 
 	Result ItemCraftedEvent::ProcessEvent(const ItemCrafted::Event* a_event, RE::BSTEventSource<ItemCrafted::Event>*)
@@ -32,7 +73,7 @@ namespace ResEvent {
 			}
 			else {
 				req_count = entry.count;
-				REX::INFO("Updated recipe to requires {} gold to repair", req_count);
+				REX::DEBUG("Updated recipe to requires {} gold to repair", req_count);
 				return RE::BSContainer::ForEachResult::kStop;
 			}
 			return RE::BSContainer::ForEachResult::kContinue;
@@ -58,6 +99,7 @@ namespace ResEvent {
 		const bool allow_all_beds = !Settings::only_allow_inn_beds.GetValue();
 
 		if (curr_cell && (in_allowed_cell || allow_all_beds)) {
+			Forms::Loader::respawn_marker->MoveTo(player);
 			curr_cell->ForEachReferenceInRange(player->GetPosition(), 200,
 				([&](RE::TESObjectREFR* a_ref)->RE::BSContainer::ForEachResult
 					{
@@ -67,7 +109,7 @@ namespace ResEvent {
 						if (const auto base = a_ref->GetBaseObject(); base && base->GetFormType() == RE::FormType::Furniture) {
 							std::string obj_base_name = base->GetName();
 							auto lowercase_name = std::transform(obj_base_name.begin(), obj_base_name.end(), obj_base_name.begin(), ::tolower);
-							REX::INFO("name of ref is: {}", base_name);
+							REX::DEBUG("name of ref is: {}", obj_base_name);
 							if (obj_base_name.find("bed") != std::string::npos) {
 								last_used_bed = a_ref;
 								last_cell = curr_cell;
@@ -86,29 +128,29 @@ namespace ResEvent {
 	{
 		SleepEvent::GetSingleton()->Register();
 		ItemCraftedEvent::GetSingleton()->Register();
+		CellChangeEvent::GetSingleton()->Register();
 	}
 	void FillFormID()
 	{
 		if (auto& last_bed = SleepEvent::GetSingleton()->last_used_bed; last_bed) {
 			SleepEvent::bed_ID = last_bed->GetFormID();
-			REX::INFO("FormID is {}", SleepEvent::bed_ID);
+			REX::DEBUG("FormID is {}", SleepEvent::bed_ID);
 		}
 	}
 	void FindRefWithID(RE::FormID a_ID)
 	{
 		if (a_ID != 0) {
-			auto bed = SleepEvent::GetSingleton()->last_used_bed;
-			bed = RE::TESForm::LookupByID(a_ID)->AsReference();
-			if (bed && bed->Is(RE::FormType::Reference) && bed->IsHandleValid()) {
-				REX::INFO("name of the reference found. it is: {}", SleepEvent::GetSingleton()->last_used_bed->GetName());
-				SleepEvent::GetSingleton()->last_used_bed = bed;
+			auto bed = RE::TESForm::LookupByID(a_ID);
+			if (bed) {				
+				SleepEvent::GetSingleton()->last_used_bed = bed->As<RE::TESObjectREFR>();
+				REX::DEBUG("name of the reference found. it is: {}", SleepEvent::GetSingleton()->last_used_bed->GetName());
 			}
-			else
-				return;
+			return;
 		}
 		else {
-			REX::INFO("no form id saved");
+			REX::ERROR("no form id saved");
 		}
+		return;
 		
 	}
 }

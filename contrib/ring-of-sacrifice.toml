@@ -1,6 +1,3 @@
-[Settings]
-fMaxDistanceScan = 1024.0
-
 [Toggles]
-bOnlyAllowInns = false
+bOnlyAllowInns = true
 bAllowRingBreaking = true
