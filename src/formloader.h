@@ -40,6 +40,10 @@ namespace Forms {
         inline static BGSListForm* allowed_bed_list;
 		inline static TESObjectREFR* respawn_marker;
 
+        //stress globals
+		inline static TESGlobal* stress_enabled_global;
+		inline static TESGlobal* stress_total_global;
+
         inline static std::unordered_set<TESObjectCELL*> teleport_cells;
 
         inline void AdjustRepairPrice() {
@@ -102,6 +106,9 @@ namespace Forms {
             morthal_inn = dh->LookupForm<TESObjectCELL>(morthal_inn_ID, base_name);
 			teleporter_marker_cell = dh->LookupForm<TESObjectCELL>(teleporter_marker_cell_ID, mod_name);
             
+			//stress globals
+			stress_enabled_global = dh->LookupForm<TESGlobal>(stress_enabled_global_ID, stress_mod_name.data());
+            stress_total_global = dh->LookupForm<TESGlobal>(stress_level_global_ID, stress_mod_name.data());
 
 			REX::INFO("Respawn Marker Form: {}", respawn_marker->GetName());
 

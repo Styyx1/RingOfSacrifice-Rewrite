@@ -7,6 +7,7 @@ namespace Mod{
 		bool should_resurrect(RE::Actor* a) const override;
 		void resurrect(RE::Actor* a) override;
 		void resurrectEnemiesOnDeath(RE::TESObjectCELL* a_cell);
+		bool StartsDead(const RE::Actor* actor) const;
 		
 	};
 	struct Teleport : REX::Singleton<Teleport> {

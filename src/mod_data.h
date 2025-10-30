@@ -42,6 +42,11 @@ namespace DATA {
 	inline constexpr int allowed_bed_list_ID = 0x80E;
 	inline constexpr int respawn_marker_ID = 0x814;
 
+	//stress mod integration
+	inline constexpr std::string_view stress_mod_name = "Stress and Fear.esp";
+	inline constexpr int stress_enabled_global_ID = 0x801;
+	inline constexpr int stress_level_global_ID = 0x8A5;
+
 #pragma endregion FormData
 #pragma region ConfigData
 	inline constexpr std::string_view toml_file_path_default = "Data/SKSE/Plugins/ring-of-sacrifice.toml";

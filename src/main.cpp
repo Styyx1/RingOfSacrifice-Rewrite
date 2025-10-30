@@ -2,7 +2,6 @@
 #include "config.h"
 #include "formloader.h"
 #include "events.h"
-#include "serialisation.h"
 
 void addSubscriber()
 {
@@ -13,7 +12,8 @@ void addSubscriber()
 	}
 }
 
-void Listener(SKSE::MessagingInterface::Message* a_msg) {
+void Listener(SKSE::MessagingInterface::Message* a_msg) 
+{
 	switch (a_msg->type) {
 	case SKSE::MessagingInterface::kDataLoaded:
 		Forms::Loader::GetSingleton()->LoadForms();
@@ -23,7 +23,6 @@ void Listener(SKSE::MessagingInterface::Message* a_msg) {
 		break;
 	case SKSE::MessagingInterface::kPostLoadGame:
 		Forms::Loader::GetSingleton()->AdjustRepairPrice();
-		REX::INFO("Respawn marker at: x={}, y={}, z={}", Forms::Loader::respawn_marker->GetPosition().x, Forms::Loader::respawn_marker->GetPosition().y, Forms::Loader::respawn_marker->GetPosition().z);
 		break;
 	}
 }
@@ -31,16 +30,7 @@ void Listener(SKSE::MessagingInterface::Message* a_msg) {
 SKSE_PLUGIN_LOAD(const SKSE::LoadInterface* a_skse)
 {
 	SKSE::Init(a_skse);
-
 	Settings::GetSingleton()->LoadSettings();
 	SKSE::GetMessagingInterface()->RegisterListener(Listener);
-	if (auto serialization = SKSE::GetSerializationInterface())
-	{
-		serialization->SetUniqueID(Serialisation::ID);
-		serialization->SetSaveCallback(&Serialisation::OnSave);
-		serialization->SetLoadCallback(&Serialisation::OnLoad);
-		serialization->SetRevertCallback(&Serialisation::OnRevert);
-	}
-
 	return true;
 }

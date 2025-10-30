@@ -31,39 +31,17 @@ namespace Util {
     };
 
 	struct Actor {
-        inline static std::vector<RE::Actor*> GetNearbyActors(RE::TESObjectREFR* a_ref, float a_radius, bool a_ignorePlayer)
+
+        inline static RE::TESObjectCELL* GetPlayerCell(RE::PlayerCharacter* player)
         {
-            {
-                std::vector<RE::Actor*> result;
-                if (const auto processLists = RE::ProcessLists::GetSingleton(); processLists) {
-                    if (a_ignorePlayer && processLists->numberHighActors == 0) {
-                        return result;
-                    }
-
-                    const auto squaredRadius = a_radius * a_radius;
-                    const auto originPos = a_ref->GetPosition();
-                    result.reserve(processLists->numberHighActors);
-
-                    const auto get_actor_within_radius = [&](RE::Actor* a_actor) {
-                        if (a_actor && a_actor != a_ref && originPos.GetSquaredDistance(a_actor->GetPosition()) <= squaredRadius) {
-                            if (a_ignorePlayer && a_actor == RE::PlayerCharacter::GetSingleton()) {
-                                return;
-                            }
-                            else
-                                result.emplace_back(a_actor);
-                        }
-                        };
-                    for (auto& actorHandle : processLists->highActorHandles) {
-                        const auto actor = actorHandle.get();
-                        get_actor_within_radius(actor.get());
-                    }
-
-                    if (!result.empty()) {
-                        return result;
-                    }
-                }
-                return result;
+            auto cell = player->GetParentCell();
+            if (!cell) {
+                cell = player->GetSaveParentCell();
             }
+            if (!cell) {
+                return nullptr;
+            }
+			return cell;
         }
 
         inline static float GetMaxHealth(RE::Actor* a_actor){
@@ -73,6 +51,16 @@ namespace Util {
         inline static float GetMaxStamina(RE::Actor* actor)
         {
             return actor->GetActorValueModifier(RE::ACTOR_VALUE_MODIFIER::kTemporary, RE::ActorValue::kStamina) + actor->GetPermanentActorValue(RE::ActorValue::kStamina);
+        }
+
+        inline static float GetMaxMagicka(RE::Actor* actor) {
+            return actor->GetActorValueModifier(RE::ACTOR_VALUE_MODIFIER::kTemporary, RE::ActorValue::kMagicka) + actor->GetPermanentActorValue(RE::ActorValue::kMagicka);
+        }
+
+        inline static void FullyHealActor(RE::Actor* a) {
+            a->RestoreActorValue(RE::ActorValue::kHealth, Util::Actor::GetMaxHealth(a));
+            a->RestoreActorValue(RE::ActorValue::kStamina, Util::Actor::GetMaxStamina(a));
+            a->RestoreActorValue(RE::ActorValue::kMagicka, Util::Actor::GetMaxMagicka(a));
         }
 
         static bool IsEffectActive(RE::Actor* a_actor, RE::EffectSetting* a_effect)
