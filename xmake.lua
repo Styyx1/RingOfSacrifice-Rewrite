@@ -3,7 +3,7 @@ set_xmakever("2.8.2")
 
 -- includes
 includes("lib/commonlibsse")
-includes("include/xmake.lua")
+includes("include/styyx-utils/xmake.lua")
 -- set project
 set_project("ring-of-sacrifice")
 set_version("2.0.0")

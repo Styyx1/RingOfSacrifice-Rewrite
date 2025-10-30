@@ -1,5 +1,4 @@
 #include "resurrection.h"
-#include "utility.h"
 #include "config.h"
 #include "formloader.h"
 #include "events.h"
@@ -9,14 +8,14 @@ namespace Mod {
     {
         return (a->GetWornArmor(RE::BGSBipedObjectForm::BipedObjectSlot::kRing) == 
             Forms::Loader::resurrect_ring) && 
-            !Util::Actor::IsEffectActive(a, Forms::Loader::cd_effect);
+            !ActorUtil::IsEffectActive(a, Forms::Loader::cd_effect);
     }
     void Resurrect::resurrect(RE::Actor* a)
     {
         RE::PlayerCharacter* const player = RE::PlayerCharacter::GetSingleton();
         RE::TESForm* const gold = RE::BGSDefaultObjectManager::GetSingleton()->GetObject(RE::DEFAULT_OBJECT::kGold);
         if (a == player) {
-            Util::Magic::ApplySpell(a, a, Forms::Loader::cooldown_spell);
+            MagicUtil::ApplySpell(a, a, Forms::Loader::cooldown_spell);
             StressHandler::Handler::GetSingleton()->ApplyStressOnDeath(15.0f, 15.0f);
             a->RemoveItem(Forms::Loader::resurrect_ring, 1, RE::ITEM_REMOVE_REASON::kRemove, nullptr, nullptr);
             if (player->GetItemCount(Forms::Loader::resurrect_ring) > 0) {
@@ -26,17 +25,17 @@ namespace Mod {
             if (Settings::allow_broken_ring.GetValue()) {
 				player->AddObjectToContainer(Forms::Loader::resurrect_ring_broken, nullptr, 1, nullptr);
             }
-            a->DrawWeaponMagicHands(false);
-            Util::Actor::FullyHealActor(a);
+            a->DrawWeaponMagicHands(false);            
+            ActorUtil::FullyHealActor(a);
             resurrectEnemiesOnDeath(a->GetParentCell());
             Teleport::GetSingleton()->TeleportToRandomInn(player);
             a->RemoveItem(gold->As<RE::TESBoundObject>(), static_cast<uint32_t>(Forms::Loader::inn_price->value), RE::ITEM_REMOVE_REASON::kRemove, nullptr, nullptr);
             return;
         }
         else {
-            Util::Magic::ApplySpell(a, a, Forms::Loader::cooldown_spell);
+            MagicUtil::ApplySpell(a, a, Forms::Loader::cooldown_spell);
             a->RemoveItem(Forms::Loader::resurrect_ring, 1, RE::ITEM_REMOVE_REASON::kRemove, nullptr, nullptr);
-            Util::Actor::FullyHealActor(a);
+            ActorUtil::FullyHealActor(a);
             return;
         }
     }
@@ -83,13 +82,13 @@ namespace Mod {
     void Teleport::TeleportToRandomInn(RE::PlayerCharacter* player)
     {       
         if (auto marker_cell = Forms::Loader::respawn_marker->GetParentCell(); marker_cell != Forms::Loader::teleporter_marker_cell) {
-            PacifyEnemies(Util::Actor::GetPlayerCell(player));
+            PacifyEnemies(ActorUtil::GetPlayerCell(player));
 			player->SetPosition(Forms::Loader::respawn_marker->GetPosition(), true);
             RE::ImageSpaceModifierInstanceForm::Trigger(Forms::Loader::fade_to_black, 1.0, player->As<RE::NiAVObject>());
             return;
         }
         //fallback if no respawn marker is set. should be impossible, but the code already exists, so, whatever
-        auto cell = Util::Actor::GetPlayerCell(player);
+        auto cell = ActorUtil::GetPlayerCell(player);
         if (!cell) {
             return;
         }
@@ -111,7 +110,7 @@ namespace Mod {
                 RE::ImageSpaceModifierInstanceForm::Trigger(Forms::Loader::fade_to_black, 1.0, player->As<RE::NiAVObject>());
             }              
             
-            int rng = Util::Randomiser::GetRandomInt(0, static_cast<int>(set.size() - 1));
+            int rng = RandomiserUtil::GetRandomInt(0, static_cast<int>(set.size() - 1));
             auto it = set.begin();
             std::advance(it, rng);
             RE::TESObjectCELL* random_cell = *it;
