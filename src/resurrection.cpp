@@ -52,7 +52,7 @@ namespace Mod {
             if (actor && !actor->IsPlayerRef() && actor->IsDead() && !actor->IsPlayerTeammate() && actor->GetActorBase() && !actor->GetActorBase()->IsUnique()) {
                 if (actor->extraList.HasQuestObjectAlias())
                     continue;
-                if (StartsDead(actor)) {					
+                if (ActorUtil::StartsDead(actor)) {					
                     continue;
                 }
                 if (actor->HasKeywordString(Settings::no_resurrect_keyword.GetValue()) || actor->GetActorBase()->HasKeywordString(Settings::no_resurrect_keyword.GetValue())) {
