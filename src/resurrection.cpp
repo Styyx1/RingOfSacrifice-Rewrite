@@ -35,6 +35,9 @@ namespace Mod {
         else {
             MagicUtil::ApplySpell(a, a, Forms::Loader::cooldown_spell);
             a->RemoveItem(Forms::Loader::resurrect_ring, 1, RE::ITEM_REMOVE_REASON::kRemove, nullptr, nullptr);
+            if (Settings::allow_broken_ring.GetValue()) {
+                player->AddObjectToContainer(Forms::Loader::resurrect_ring_broken, nullptr, 1, nullptr);
+            }
             ActorUtil::FullyHealActor(a);
             return;
         }
