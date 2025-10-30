@@ -1,6 +1,4 @@
 #include "stresshandler.h"
-#include "utility.h"
-#include "config.h"
 #include "formloader.h"
 
 namespace StressHandler {
