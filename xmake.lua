@@ -3,7 +3,7 @@ set_xmakever("2.8.2")
 
 -- includes
 includes("lib/commonlibsse")
-
+includes("include/xmake.lua")
 -- set project
 set_project("ring-of-sacrifice")
 set_version("2.0.0")
@@ -29,6 +29,7 @@ set_config("commonlib_toml", true)
 target("ring-of-sacrifice")
     -- add dependencies to target
     add_deps("commonlibsse")
+    add_deps("styyx-util")
 
     -- add commonlibsse plugin
     add_rules("commonlibsse.plugin", {

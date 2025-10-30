@@ -84,8 +84,6 @@ namespace Util {
             }
             return false;
         }
-
-
 	};
 
     struct Cells {
