@@ -23,6 +23,7 @@ void Listener(SKSE::MessagingInterface::Message* a_msg)
 		break;
 	case SKSE::MessagingInterface::kPostLoadGame:
 		Forms::Loader::GetSingleton()->AdjustRepairPrice();
+		Forms::Loader::respawn_marker->MoveTo(RE::PlayerCharacter::GetSingleton());
 		break;
 	}
 }
