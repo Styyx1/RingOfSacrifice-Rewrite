@@ -24,7 +24,6 @@ namespace Forms {
         inline static TESObjectCELL* solstheim_inn{ nullptr };
         inline static TESObjectCELL* morthal_inn{ nullptr };
 		inline static TESObjectCELL* teleporter_marker_cell{ nullptr };
-        inline static TESGlobal* inn_price;
 
         inline static SpellItem* cooldown_spell;
         inline static SpellItem* heal_spell;
@@ -70,8 +69,13 @@ namespace Forms {
         inline void LoadForms() {
             const auto dh = TESDataHandler::GetSingleton();
             // Worldspace, global, and other
+
+            if(const auto file = dh->LookupModByName(mod_name); !file || file->compileIndex == 0xFF) {
+                REX::FAIL(std::format("Could not find {}, please enable the mod", mod_name));
+                return;
+			}
+
             tamriel_world = dh->LookupForm<TESWorldSpace>(tamriel_worldspace_ID, base_name);
-            inn_price = dh->LookupForm<TESGlobal>(inn_price_ID, base_name);
             cooldown_spell = dh->LookupForm<SpellItem>(cooldown_spell_ID, mod_name);
             heal_spell = dh->LookupForm<SpellItem>(heal_spell_ID, mod_name);
             resurrect_ring = dh->LookupForm<TESObjectARMO>(resurrect_ring_ID, mod_name);

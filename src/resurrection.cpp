@@ -13,10 +13,9 @@ namespace Mod {
     void Resurrect::resurrect(RE::Actor* a)
     {
         RE::PlayerCharacter* const player = RE::PlayerCharacter::GetSingleton();
-        RE::TESForm* const gold = RE::BGSDefaultObjectManager::GetSingleton()->GetObject(RE::DEFAULT_OBJECT::kGold);
         if (a == player) {
             MagicUtil::ApplySpell(a, a, Forms::Loader::cooldown_spell);
-            StressHandler::Handler::GetSingleton()->ApplyStressOnDeath(15.0f, 15.0f);
+            StressHandler::Handler::GetSingleton()->ApplyStressOnDeath(Settings::stress_on_death_percentage.GetValue(), Settings::stress_on_death_minimum.GetValue());
             a->RemoveItem(Forms::Loader::resurrect_ring, 1, RE::ITEM_REMOVE_REASON::kRemove, nullptr, nullptr);
             if (player->GetItemCount(Forms::Loader::resurrect_ring) > 0) {
                 auto eqman = RE::ActorEquipManager::GetSingleton();
@@ -29,7 +28,6 @@ namespace Mod {
             ActorUtil::FullyHealActor(a);
             resurrectEnemiesOnDeath(a->GetParentCell());
             Teleport::GetSingleton()->TeleportToRandomInn(player);
-            a->RemoveItem(gold->As<RE::TESBoundObject>(), static_cast<uint32_t>(Forms::Loader::inn_price->value), RE::ITEM_REMOVE_REASON::kRemove, nullptr, nullptr);
             return;
         }
         else {
@@ -115,8 +113,7 @@ namespace Mod {
             REX::DEBUG("name of cell is {}", random_cell->GetName());
             player->CenterOnCell(random_cell);
             RE::ImageSpaceModifierInstanceForm::Trigger(Forms::Loader::fade_to_black, 1.0, player->As<RE::NiAVObject>());
-        }
-        
+        }        
     }
 
 	//stop combat on all enemies in the cell

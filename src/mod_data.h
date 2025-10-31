@@ -3,7 +3,7 @@
 namespace DATA {
 	
 #pragma region FormData
-	inline constexpr const char* mod_name = "RingOfSacrifice.esp";
+	inline constexpr const char* mod_name = "RingOfSacrifice.esl";
 	inline constexpr const char* base_name = "Skyrim.esm";
 	inline constexpr const char* dragonborn_plugin = "Dragonborn.esm";
 
@@ -31,7 +31,6 @@ namespace DATA {
 	inline constexpr int cooldown_spell_ID = 0x807;
 	inline constexpr int resurrect_ring_ID = 0x803;
 	inline constexpr int cooldown_effect_ID = 0x806;
-	inline constexpr int inn_price_ID = 0x9CC98;
 	inline constexpr int tamriel_worldspace_ID = 0x3C;
 	inline constexpr int fade_to_black_ID = 0xF756D;
 	inline constexpr int resurrect_ring_broken_ID = 0x809;

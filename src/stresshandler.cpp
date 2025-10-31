@@ -5,6 +5,11 @@ namespace StressHandler {
 	void Handler::ApplyStressOnDeath(float stress_increase_percentage, float min_amount_applied) const
 	{
 		if (CanApplyStress()) {
+
+			if(stress_increase_percentage <= 0.0f) {
+				return;
+			}
+
 			auto current_stress = GetStressLevel();
 			float stress_increase = current_stress * (stress_increase_percentage / 100.0f);
 			if (stress_increase < min_amount_applied) {
