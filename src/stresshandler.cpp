@@ -11,8 +11,7 @@ namespace StressHandler {
 				stress_increase = min_amount_applied;
 			}
 			Forms::Loader::stress_total_global->value += stress_increase;
-		}
-		
+		}		
 	}
 	float Handler::GetStressLevel() const
 	{

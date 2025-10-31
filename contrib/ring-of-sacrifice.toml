@@ -1,7 +1,7 @@
 [Settings]
 sNoResurrectKeyword = "NotResurrect"
-fStressOnDeathPercentage = 15.0
-fStressOnDeathMinimum = 15.0
+fStressOnDeathPercentage = 20.0
+fStressOnDeathMinimum = 10.0
 
 [Toggles]
 bAllowRingBreaking = true

@@ -75,11 +75,6 @@ namespace Mod {
             }
         }
     }
-	// check if actor starts dead. https://github.com/powerof3/Spell-Perk-Item-Distributor/blob/4972b74819b935b1e443cb4022691ac572785da5/SPID/src/LookupNPC.cpp#L254
-    bool Resurrect::StartsDead(const RE::Actor* actor) const
-    {
-        return actor && (actor->formFlags & RE::Actor::RecordFlags::kStartsDead);
-    }
 
 	//name is misleading, this function teleports to respawn marker if set, otherwise random inn. The name is basically legacy
     void Teleport::TeleportToRandomInn(RE::PlayerCharacter* player)
