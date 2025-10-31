@@ -1,6 +1,4 @@
-# CommonLibSSE Plugin Template
-
-This is a basic plugin template using CommonLibSSE.
+# Ring of Sacrifice
 
 ### Requirements
 * [XMake](https://xmake.io) [2.8.2+]
@@ -8,8 +6,8 @@ This is a basic plugin template using CommonLibSSE.
 
 ## Getting Started
 ```bat
-git clone --recurse-submodules https://github.com/libxse/commonlibsse-template
-cd commonlibsse-template
+git clone --recurse-submodules https://github.com/libxse/RingOfSacrifice-Rewrite
+cd RingOfSacrifice-Rewrite
 ```
 
 ### Build
@@ -41,6 +39,3 @@ If you want to upgrade the project's dependencies, run the following commands:
 xmake repo --update
 xmake require --upgrade
 ```
-
-## Documentation
-Please refer to the [Wiki](../../wiki/Home) for more advanced topics.
