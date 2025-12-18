@@ -43,8 +43,8 @@ namespace DATA {
 
 	//stress mod integration
 	inline constexpr std::string_view stress_mod_name = "Stress and Fear.esp";
-	inline constexpr int stress_enabled_global_ID = 0x801;
-	inline constexpr int stress_level_global_ID = 0x8A5;
+	inline constexpr int stress_enabled_global_ID = 0x8A5;
+	inline constexpr int stress_level_global_ID =  0x801;
 
 #pragma endregion FormData
 #pragma region ConfigData
